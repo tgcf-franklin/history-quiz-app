@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 历史背题助手 - 完整版 1182题</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header-subtitle { font-size: 1.2em; opacity: 0.9; }
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .theme-btn {
+            padding: 15px;
+            border: 2px solid white;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            transition: all 0.3s;
+            white-space: pre-wrap;
+        }
+        .theme-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+        .theme-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .main-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            min-height: 500px;
+        }
+        .welcome {
+            text-align: center;
+            color: #667eea;
+            padding: 80px 20px;
+        }
+        .welcome h2 { font-size: 2em; margin-bottom: 20px; }
+        .welcome p { font-size: 1.1em; color: #999; margin: 15px 0; }
+        .question-box { display: none; }
+        .question-box.show { display: block; }
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .stat { flex: 1; }
+        .stat-label { color: #999; font-size: 0.9em; }
+        .stat-value { font-size: 1.8em; font-weight: bold; color: #667eea; }
+        .q-num {
+            color: #999;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+        .question-text {
+            font-size: 1.35em;
+            color: #333;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            border-radius: 8px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid #667eea;
+            word-wrap: break-word;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 25px 0;
+        }
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .btn:hover { transform: translateY(-3px); }
+        .btn-show {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            grid-column: 1 / -1;
+        }
+        .btn-show:hover { box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .btn-correct {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        .btn-correct:hover { box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4); }
+        .btn-wrong {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        .btn-wrong:hover { box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4); }
+        .btn-next {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            grid-column: 1 / -1;
+        }
+        .btn-next:hover { box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4); }
+        .answer-box {
+            background: #f0fff4;
+            border-left: 5px solid #2ecc71;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #2ecc71;
+            font-size: 1.1em;
+            line-height: 1.8;
+            display: none;
+            word-wrap: break-word;
+        }
+        .answer-box.show { display: block; }
+        .msg {
+            text-align: center;
+            font-size: 1.1em;
+            margin: 15px 0;
+            min-height: 30px;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 历史背题助手</h1>
+            <p class="header-subtitle">🎯 完整版 - 1182题全收录</p>
+        </div>
+
+        <div class="theme-grid" id="themeGrid"></div>
+
+        <div class="main-card">
+            <div class="welcome" id="welcome">
+                <h2>👋 欢迎！</h2>
+                <p>🎓 1182个历史考点</p>
+                <p>点击上面选择主题开始练习</p>
+                <p>💪 让我们一起征服历史！</p>
+            </div>
+
+            <div class="question-box" id="questionBox">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div class="stats-bar">
+                    <div class="stat">
+                        <div class="stat-label">已答</div>
+                        <div class="stat-value" id="answered">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">✅ 正确</div>
+                        <div class="stat-value" id="correct" style="color: #2ecc71;">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">❌ 错误</div>
+                        <div class="stat-value" id="wrong" style="color: #e74c3c;">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">准确率</div>
+                        <div class="stat-value" id="rate">0%</div>
+                    </div>
+                </div>
+
+                <div class="q-num">
+                    第 <span id="qNum">1</span> / <span id="totalNum">10</span> 题
+                </div>
+
+                <div class="question-text" id="questionText">题目</div>
+
+                <button class="btn btn-show" onclick="toggleAnswer()">🔓 点击看答案</button>
+
+                <div class="answer-box" id="answerBox">答案</div>
+
+                <div class="msg" id="msg"></div>
+
+                <div class="buttons">
+                    <button class="btn btn-correct" onclick="handleCorrect()">✅ 答对了</button>
+                    <button class="btn btn-wrong" onclick="handleWrong()">❌ 答错了</button>
+                </div>
+
+                <button class="btn btn-next" onclick="nextQuestion()">➡️ 下一题</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="questions_full.js"></script>
+    <script>
+        let currentTheme = null;
+        let questions = [];
+        let index = 0;
+        let stats = { answered: 0, correct: 0, wrong: 0 };
+
+        function init() {
+            const grid = document.getElementById('themeGrid');
+            for (const theme in QUESTIONS_DATA) {
+                const btn = document.createElement('button');
+                btn.className = 'theme-btn';
+                btn.textContent = `${theme}\n(${QUESTIONS_DATA[theme].length}题)`;
+                btn.onclick = () => selectTheme(theme, btn);
+                grid.appendChild(btn);
+            }
+        }
+
+        function selectTheme(theme, btn) {
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            currentTheme = theme;
+            questions = QUESTIONS_DATA[theme].sort(() => Math.random() - 0.5);
+            index = 0;
+            stats = { answered: 0, correct: 0, wrong: 0 };
+
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('questionBox').classList.add('show');
+            document.getElementById('totalNum').textContent = questions.length;
+            document.getElementById('answerBox').classList.remove('show');
+
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (index >= questions.length) {
+                const rate = ((stats.correct / questions.length) * 100).toFixed(1);
+                alert(`🎉 ${currentTheme}完成！\n\n✅ 答对: ${stats.correct}/${questions.length}\n📊 准确率: ${rate}%\n\n🏆 继续加油！`);
+                reset();
+                return;
+            }
+
+            const q = questions[index];
+            document.getElementById('questionText').textContent = q.q;
+            document.getElementById('answerBox').textContent = q.a;
+            document.getElementById('answerBox').classList.remove('show');
+            document.getElementById('qNum').textContent = index + 1;
+            document.getElementById('msg').textContent = '';
+
+            // 更新进度条
+            const progress = ((index) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function toggleAnswer() {
+            document.getElementById('answerBox').classList.toggle('show');
+        }
+
+        function handleCorrect() {
+            stats.correct++;
+            stats.answered++;
+            document.getElementById('msg').textContent = '🎉 太棒了！继续加油！';
+            update();
+            setTimeout(nextQuestion, 800);
+        }
+
+        function handleWrong() {
+            stats.wrong++;
+            stats.answered++;
+            document.getElementById('msg').textContent = '📚 下次会更好！加油💪';
+            update();
+            setTimeout(nextQuestion, 800);
+        }
+
+        function nextQuestion() {
+            index++;
+            showQuestion();
+        }
+
+        function update() {
+            document.getElementById('answered').textContent = stats.answered;
+            document.getElementById('correct').textContent = stats.correct;
+            document.getElementById('wrong').textContent = stats.wrong;
+            if (stats.answered > 0) {
+                document.getElementById('rate').textContent = ((stats.correct / stats.answered) * 100).toFixed(0) + '%';
+            }
+        }
+
+        function reset() {
+            document.getElementById('welcome').style.display = 'block';
+            document.getElementById('questionBox').classList.remove('show');
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        }
+
+        init();
+    </script>
+</body>
+</html>
