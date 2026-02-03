@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>题库加载测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .category {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+        }
+        .category-name {
+            font-weight: bold;
+            color: #667eea;
+        }
+        .category-count {
+            color: #666;
+            font-size: 14px;
+        }
+        .error {
+            color: red;
+            padding: 10px;
+            background: #ffe0e0;
+            border-radius: 4px;
+        }
+        .success {
+            color: green;
+            padding: 10px;
+            background: #e0ffe0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 题库加载测试</h1>
+        <div id="status"></div>
+        <div id="categories"></div>
+    </div>
+
+    <script src="questions_full.js"></script>
+    <script>
+        const statusDiv = document.getElementById('status');
+        const categoriesDiv = document.getElementById('categories');
+
+        // 检查题库是否加载
+        if (typeof QUESTIONS_DATA === 'undefined') {
+            statusDiv.innerHTML = '<div class="error">❌ 题库未加载！</div>';
+        } else {
+            const categories = Object.keys(QUESTIONS_DATA);
+            let totalQuestions = 0;
+
+            categories.forEach(cat => {
+                totalQuestions += QUESTIONS_DATA[cat].length;
+            });
+
+            statusDiv.innerHTML = `
+                <div class="success">
+                    ✅ 题库加载成功！<br>
+                    分类数: ${categories.length}<br>
+                    总题数: ${totalQuestions}
+                </div>
+            `;
+
+            // 显示所有分类
+            let html = '<h2>分类详情:</h2>';
+            categories.forEach(cat => {
+                const count = QUESTIONS_DATA[cat].length;
+                html += `
+                    <div class="category">
+                        <span class="category-name">${cat}</span>
+                        <span class="category-count">${count} 题</span>
+                    </div>
+                `;
+            });
+
+            categoriesDiv.innerHTML = html;
+
+            // 在控制台输出
+            console.log('✅ 题库加载成功');
+            console.log('分类:', categories);
+            console.log('总题数:', totalQuestions);
+            console.log('QUESTIONS_DATA:', QUESTIONS_DATA);
+        }
+    </script>
+</body>
+</html>

@@ -414,46 +414,34 @@
             answered: false
         };
 
-        // 快速背题的分类
-        const quickCategories = {
-            '条约协议': [],
-            '重大事件': [],
-            '朝代更替': [],
-            '人物事迹': [],
-            '文化成就': [],
-            '社会制度': []
-        };
+        // 快速背题的分类 - 将在初始化时从 QUESTIONS_DATA 填充
+        let quickCategories = {};
 
-        // 完整练习的分类
-        const fullCategories = {
-            '七年级上': [],
-            '七年级下': [],
-            '八年级上': [],
-            '八年级下': [],
-            '九年级上': [],
-            '九年级下': []
-        };
+        // 完整练习的分类 - 将在初始化时从 QUESTIONS_DATA 填充
+        let fullCategories = {};
 
         // 初始化分类
         function initCategories() {
-            if (typeof allQuestions === 'undefined') {
+            if (typeof QUESTIONS_DATA === 'undefined') {
                 console.error('题库未加载');
                 return;
             }
 
-            // 简单分类逻辑（实际应根据题目数据调整）
-            const questions = allQuestions || [];
-            const perCategory = Math.floor(questions.length / 6);
+            console.log('QUESTIONS_DATA 分类:', Object.keys(QUESTIONS_DATA));
 
-            // 快速背题分类
-            Object.keys(quickCategories).forEach((cat, idx) => {
-                quickCategories[cat] = questions.slice(idx * perCategory, (idx + 1) * perCategory);
+            // 快速背题分类 - 直接使用 QUESTIONS_DATA 的所有分类
+            quickCategories = { ...QUESTIONS_DATA };
+
+            // 完整练习分类 - 也使用 QUESTIONS_DATA 的所有分类
+            fullCategories = { ...QUESTIONS_DATA };
+
+            // 计算总题数
+            let totalQuestions = 0;
+            Object.values(QUESTIONS_DATA).forEach(categoryQuestions => {
+                totalQuestions += categoryQuestions.length;
             });
 
-            // 完整练习分类
-            Object.keys(fullCategories).forEach((cat, idx) => {
-                fullCategories[cat] = questions.slice(idx * perCategory, (idx + 1) * perCategory);
-            });
+            console.log('题库加载成功，共', totalQuestions, '题，分类数:', Object.keys(QUESTIONS_DATA).length);
 
             renderCategories();
         }
