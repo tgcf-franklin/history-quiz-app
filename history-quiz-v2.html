@@ -414,12 +414,6 @@
             answered: false
         };
 
-        // 快速背题的分类 - 将在初始化时从 QUESTIONS_DATA 填充
-        let quickCategories = {};
-
-        // 完整练习的分类 - 将在初始化时从 QUESTIONS_DATA 填充
-        let fullCategories = {};
-
         // 初始化分类
         function initCategories() {
             if (typeof QUESTIONS_DATA === 'undefined') {
@@ -427,22 +421,7 @@
                 return;
             }
 
-            console.log('QUESTIONS_DATA 分类:', Object.keys(QUESTIONS_DATA));
-
-            // 快速背题分类 - 直接使用 QUESTIONS_DATA 的所有分类
-            quickCategories = { ...QUESTIONS_DATA };
-
-            // 完整练习分类 - 也使用 QUESTIONS_DATA 的所有分类
-            fullCategories = { ...QUESTIONS_DATA };
-
-            // 计算总题数
-            let totalQuestions = 0;
-            Object.values(QUESTIONS_DATA).forEach(categoryQuestions => {
-                totalQuestions += categoryQuestions.length;
-            });
-
-            console.log('题库加载成功，共', totalQuestions, '题，分类数:', Object.keys(QUESTIONS_DATA).length);
-
+            console.log('题库加载成功，分类:', Object.keys(QUESTIONS_DATA));
             renderCategories();
         }
 
@@ -451,14 +430,19 @@
             const quickDiv = document.getElementById('quickCategories');
             const fullDiv = document.getElementById('fullCategories');
 
-            quickDiv.innerHTML = Object.entries(quickCategories).map(([name, items]) =>
+            if (!quickDiv || !fullDiv) return;
+
+            // 直接使用 QUESTIONS_DATA 的分类
+            const categories = Object.entries(QUESTIONS_DATA);
+
+            quickDiv.innerHTML = categories.map(([name, items]) =>
                 `<div class="cat" onclick="startQuiz('quick', '${name}')" title="${name}">
                     <span class="cat-name">${name}</span>
                     <span class="cat-count">${items.length} 题</span>
                 </div>`
             ).join('');
 
-            fullDiv.innerHTML = Object.entries(fullCategories).map(([name, items]) =>
+            fullDiv.innerHTML = categories.map(([name, items]) =>
                 `<div class="cat" onclick="startQuiz('full', '${name}')" title="${name}">
                     <span class="cat-name">${name}</span>
                     <span class="cat-count">${items.length} 题</span>
@@ -486,14 +470,20 @@
             state.wrong = [];
             state.answered = false;
 
-            const categories = mode === 'quick' ? quickCategories : fullCategories;
-            state.list = [...categories[category]];
+            // 直接从 QUESTIONS_DATA 获取题目
+            if (typeof QUESTIONS_DATA === 'undefined' || !QUESTIONS_DATA[category]) {
+                alert('题库未加载或分类不存在');
+                return;
+            }
+
+            state.list = [...QUESTIONS_DATA[category]];
 
             if (state.list.length === 0) {
                 alert('该分类暂无题目');
                 return;
             }
 
+            console.log('开始答题:', category, '共', state.list.length, '题');
             save();
             showQuiz();
         }
