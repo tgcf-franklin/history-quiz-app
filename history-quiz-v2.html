@@ -586,7 +586,7 @@
                     state.list = state.wrong;
                     state.wrong = [];
                     state.index = 0;
-                    state.correct = 0;
+                    // 不要重置 state.correct，保持统计信息
                     save();
                     render();
                 } else {
@@ -619,7 +619,8 @@
                 </div>
             `;
 
-            localStorage.clear();
+            // 不要清除 localStorage，让用户可以继续练习
+            // localStorage.clear();
         }
 
         // 继续上次练习
@@ -632,8 +633,7 @@
 
             try {
                 state = JSON.parse(saved);
-                const categories = state.mode === 'quick' ? quickCategories : fullCategories;
-                state.list = categories[state.category] || [];
+                // 不要重新获取分类，直接使用保存的 state.list
                 showQuiz();
             } catch (e) {
                 alert('记录已过期，请重新开始');
@@ -648,6 +648,7 @@
             document.getElementById('fullMode').classList.add('hidden');
             document.getElementById('complete').classList.add('hidden');
             document.getElementById('home').classList.remove('hidden');
+            // 只在用户主动返回首页时清除，不要在完成时清除
             localStorage.clear();
         }
 
