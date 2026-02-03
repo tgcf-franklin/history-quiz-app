@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>历史练习应用</title>
+    <title>📚 历史练习应用 - v2.0</title>
     <style>
         * {
             margin: 0;
@@ -17,6 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         .container {
             text-align: center;
@@ -24,38 +25,158 @@
             background: white;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 400px;
+            max-width: 500px;
+            width: 100%;
         }
         h1 {
             color: #333;
-            margin-bottom: 20px;
-            font-size: 28px;
+            margin-bottom: 12px;
+            font-size: 32px;
         }
-        p {
+        .subtitle {
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
+            font-size: 16px;
         }
-        a {
+        .version {
             display: inline-block;
-            padding: 14px 32px;
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 18px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            min-height: 100px;
         }
-        a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+        }
+        .btn-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .btn-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .btn-desc {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .features {
+            background: #f5f7fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            text-align: left;
+        }
+        .features h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .feature-list {
+            list-style: none;
+        }
+        .feature-list li {
+            color: #666;
+            font-size: 13px;
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 12px;
+            color: #999;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .btn {
+                min-height: 80px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>历史练习应用</h1>
-        <p>初中历史知识点练习与测试</p>
-        <a href="history-quiz.html">开始练习</a>
+        <div class="version">v2.0 · 全新升级</div>
+        <h1>📚 历史练习应用</h1>
+        <p class="subtitle">1182 道初中历史核心考点</p>
+
+        <div class="buttons">
+            <button class="btn" onclick="location.href='history-quiz-v2.html'">
+                <div class="btn-icon">⚡</div>
+                <div class="btn-title">快速背题</div>
+                <div class="btn-desc">分类学习 · 错题重做</div>
+            </button>
+            <button class="btn" onclick="location.href='history-quiz.html'">
+                <div class="btn-icon">📖</div>
+                <div class="btn-title">完整练习</div>
+                <div class="btn-desc">全部题目 · 详细统计</div>
+            </button>
+        </div>
+
+        <div class="features">
+            <h3>✨ 新版特性</h3>
+            <ul class="feature-list">
+                <li>双模式学习 - 快速背题和完整练习</li>
+                <li>分类学习 - 按主题循序渐进</li>
+                <li>错题重做 - 自动收集错题重新练习</li>
+                <li>进度保存 - 自动保存学习进度</li>
+                <li>先想再看 - 强制思考后再看答案</li>
+                <li>详细统计 - 实时显示学习统计</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📱 支持手机、平板、电脑 · 🌐 <a href="https://his.juntop.me">访问官方域名</a></p>
+            <p style="margin-top: 8px;">最后更新: 2026-02-04</p>
+        </div>
     </div>
 </body>
 </html>

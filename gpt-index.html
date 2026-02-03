@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>历史背题助手</title>
+<style>
+body {
+  margin: 0;
+  background: #f5f6f8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+h1 {
+  margin-top: 0;
+}
+.section {
+  margin-top: 24px;
+}
+.categories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.cat {
+  padding: 14px;
+  background: #eef2ff;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+.cat:hover {
+  background: #dfe6ff;
+}
+.progress {
+  font-size: 14px;
+  color: #666;
+}
+.question {
+  font-size: 20px;
+  margin: 24px 0;
+}
+.answer {
+  background: #f0f4ff;
+  padding: 16px;
+  border-radius: 8px;
+  display: none;
+}
+.buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+button {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.primary { background: #4f7cff; color: #fff; }
+.success { background: #4caf50; color: #fff; }
+.danger { background: #f44336; color: #fff; }
+.secondary { background: #e0e0e0; }
+.hidden { display: none; }
+.footer {
+  margin-top: 32px;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <div class="card" id="home">
+    <h1>📚 历史背题助手</h1>
+    <p class="progress">1182 个核心历史考点 · 按模块循序记忆</p>
+
+    <div class="section">
+      <strong>选择一个主题开始</strong>
+      <div class="categories">
+        <div class="cat" onclick="start('条约协议')">条约协议<br/>18 题</div>
+        <div class="cat" onclick="start('重大事件')">重大事件<br/>129 题</div>
+        <div class="cat" onclick="start('朝代更替')">朝代更替<br/>129 题</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <button class="secondary" onclick="resume()">继续上次练习</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="quiz">
+    <div class="progress" id="progress"></div>
+    <div class="question" id="question"></div>
+
+    <div class="buttons">
+      <button class="primary" id="thinkBtn">我想好了，查看答案</button>
+    </div>
+
+    <div class="answer" id="answer"></div>
+
+    <div class="buttons hidden" id="judgeBtns">
+      <button class="success" onclick="mark(true)">答对了</button>
+      <button class="danger" onclick="mark(false)">答错了</button>
+    </div>
+
+    <div class="buttons hidden" id="nextBtns">
+      <button class="secondary" onclick="next()">下一题</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    先想再看 · 错题自动重练 · 进度自动保存
+  </div>
+</div>
+
+<script>
+const data = {
+  "条约协议": [
+    { q: "《南京条约》签订于哪一年？", a: "1842 年，中国第一个不平等条约。" },
+    { q: "《马关条约》签订于哪一年？", a: "1895 年，中日甲午战争后。" }
+  ],
+  "重大事件": [
+    { q: "五四运动的导火索？", a: "巴黎和会外交失败。" }
+  ],
+  "朝代更替": [
+    { q: "清朝建立于哪一年？", a: "1636 年（皇太极改国号为清）。" }
+  ]
+};
+
+let list = [];
+let index = 0;
+let wrong = [];
+let current = "";
+
+function start(cat) {
+  current = cat;
+  list = [...data[cat]].slice(0, 10);
+  index = 0;
+  wrong = [];
+  save();
+  showQuiz();
+}
+
+function resume() {
+  const saved = localStorage.getItem("current");
+  if (!saved) return alert("没有可继续的记录");
+  current = saved;
+  list = JSON.parse(localStorage.getItem("list"));
+  index = Number(localStorage.getItem("index"));
+  wrong = JSON.parse(localStorage.getItem("wrong"));
+  showQuiz();
+}
+
+function showQuiz() {
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  render();
+}
+
+function render() {
+  const q = list[index];
+  document.getElementById("progress").textContent =
+    `${current} · 第 ${index + 1} / ${list.length} 题`;
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("answer").textContent = q.a;
+  document.getElementById("answer").style.display = "none";
+  document.getElementById("thinkBtn").style.display = "block";
+  document.getElementById("judgeBtns").classList.add("hidden");
+  document.getElementById("nextBtns").classList.add("hidden");
+}
+
+document.getElementById("thinkBtn").onclick = () => {
+  document.getElementById("answer").style.display = "block";
+  document.getElementById("judgeBtns").classList.remove("hidden");
+  document.getElementById("thinkBtn").style.display = "none";
+};
+
+function mark(ok) {
+  if (!ok) wrong.push(list[index]);
+  save();
+  document.getElementById("judgeBtns").classList.add("hidden");
+  document.getElementById("nextBtns").classList.remove("hidden");
+}
+
+function next() {
+  index++;
+  if (index >= list.length) {
+    if (wrong.length) {
+      alert("开始重做错题");
+      list = wrong;
+      wrong = [];
+      index = 0;
+    } else {
+      alert("本模块完成");
+      localStorage.clear();
+      location.reload();
+      return;
+    }
+  }
+  save();
+  render();
+}
+
+function save() {
+  localStorage.setItem("current", current);
+  localStorage.setItem("list", JSON.stringify(list));
+  localStorage.setItem("index", index);
+  localStorage.setItem("wrong", JSON.stringify(wrong));
+}
+</script>
+</body>
+</html>
